@@ -5,40 +5,42 @@ using UnityEngine;
 
 public class BeatDetector : MonoBehaviour {
 
-    public AudioSource audioSource;
- 
-    public Renderer bassObjectRenderer;
-    public Color bassColOld;
-    public Color bassColNew;
-    public Material bassObjectMaterial;
+    public AudioSource  audioSource;            // 
+    public AudioClip    startingAudioClip;
+    public Renderer     bassObjectRenderer;     // 
+    public Color        bassColOld;             // 
+    public Color        bassColNew;             // 
+    public Material     bassObjectMaterial;     // 
+                                                 
+    public Renderer     lowObjectRenderer;      // 
+    public Color        lowColOld;              // 
+    public Color        lowColNew;              // 
+    public Material     lowObjectMaterial;      // 
+                                                 
+    public int          bassLowerLimit = 60;    // 
+    public int          bassUpperLimit = 180;   // 
+    public int          lowLowerLimit = 500;    // 
+    public int          lowUpperLimit = 2000;   // 
+                                                 
+    const float         lerp = 0.1f;            // 
 
-    public Renderer lowObjectRenderer;
-    public Color lowColOld;
-    public Color lowColNew;
-    public Material lowObjectMaterial;
+    private int         windowSize;
+    private float       samplingFrequency;
 
-    public int bassLowerLimit = 60;
-    public int bassUpperLimit = 180;
-    public int lowLowerLimit = 500;
-    public int lowUpperLimit = 2000;
+    float[]             freqSpectrum = new float[4];
+    float[]             freqAvgSpectrum = new float[4];
 
-    const float lerp = 0.1f;
+    public bool         bass, low;
 
-    //new variables
-    private int windowSize;
-    private float samplingFrequency;
+    Deque<List<float>>  FFTHistory_beatDetector = new Deque<List<float>>();
 
-    float[] freqSpectrum = new float[4];
-    float[] freqAvgSpectrum = new float[4];
+    int                 FFTHistory_maxSize;
+    List<int>           beatDetector_bandLimits = new List<int>();
 
-    public bool bass, low;
+    void Awake() {
 
-    Deque<List<float>> FFTHistory_beatDetector = new Deque<List<float>>();
-
-    int FFTHistory_maxSize;
-    List<int> beatDetector_bandLimits = new List<int>();
-
-    void Start() {
+        audioSource.clip = startingAudioClip;
+        audioSource.Play();
         int bandsize = audioSource.clip.frequency / 1024; //(samplingFrequency / windowSize)
 
         FFTHistory_maxSize = audioSource.clip.frequency / 1024;
