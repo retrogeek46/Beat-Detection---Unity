@@ -14,5 +14,5 @@ The color changes whenever the frequency crosses the dynamic threshold but the e
 script are to be explored. 
 
 # TODO
-    * Frequency window for different ranges (bass, mid, treble etc)
-    * Realtime audio listening
+- Frequency window for different ranges (bass, mid, treble etc)
+- Realtime audio listening
