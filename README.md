@@ -1,6 +1,7 @@
 # Beat Detection
-This is a Unity program that attempts to find the beats present in an audio file using FFT's and variance. The main scene is BeatDetection and 
-a utility scene Visualizer is present that can be used to see how the frequencies of given audio clip are distributed.
+This is a Unity program that attempts to find the beats present in an audio file using FFT's and variance. The main scene is BeatDetection and a utility scene Visualizer is present that can be used to see how the frequencies of given audio clip are distributed.
+
+The utility script is from [this blog post](http://www.41post.com/?p=4776) by DimasTheDriver.
 
 # Installation
 This project has been made using Unity 2018.3. Clone the repo and open the folder using Unity Hub.
