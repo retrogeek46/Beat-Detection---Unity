@@ -1,6 +1,8 @@
 # Beat Detection
 This is a Unity program that attempts to find the beats present in an audio file using FFT's and variance. The main scene is BeatDetection and a utility scene Visualizer is present that can be used to see how the frequencies of given audio clip are distributed.
 
+The logic for beat detection is a transformation of C++ code from https://www.parallelcube.com/2018/03/30/beat-detection-algorithm/ into C#.
+
 The utility script is from [this blog post](http://www.41post.com/?p=4776) by DimasTheDriver.
 
 # Installation
