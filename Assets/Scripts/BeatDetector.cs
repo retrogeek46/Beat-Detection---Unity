@@ -38,10 +38,10 @@ public class BeatDetector : MonoBehaviour {
     List<int>           beatDetector_bandLimits = new List<int>();
 
     void Awake() {
-
+        // initialize
         audioSource.clip = startingAudioClip;
         audioSource.Play();
-        int bandsize = audioSource.clip.frequency / 1024; //(samplingFrequency / windowSize)
+        int bandsize = audioSource.clip.frequency / 1024; // bandsize = (samplingFrequency / windowSize)
 
         FFTHistory_maxSize = audioSource.clip.frequency / 1024;
 
@@ -60,20 +60,24 @@ public class BeatDetector : MonoBehaviour {
 
     // Update is called once per frame
     void Update() {
+        // restart track by pressing space
         if (Input.GetKeyDown(KeyCode.Space)) {
             audioSource.Stop();
             audioSource.Play();
         }
 
+        // stop music by pressing S
         if (Input.GetKeyDown(KeyCode.S)) {
             audioSource.Stop();
         }
 
+        // Check if current sample are above statistical threshold
         GetBeat(ref freqSpectrum, ref freqAvgSpectrum, ref bass, ref low);
 
     }
 
     private void LateUpdate() {
+        // change color of cubes based on booleans
         if (bass) {
             bassObjectMaterial.color = Color.Lerp(bassObjectMaterial.color, bassColNew, lerp);
         } else {
@@ -87,7 +91,14 @@ public class BeatDetector : MonoBehaviour {
         }
     }
 
-    void GetBeat(ref float[] spectrum, ref float[] avgSpectrum, ref bool isBass, ref bool isLow) {
+    /// <summary>
+    /// A function to set the booleans for beats by comparing current audio sample with statistical values of previous one's
+    /// </summary>
+    /// <param name="spectrum">reference to the array containing current samples and amplitudes</param>
+    /// <param name="avgSpectrum">reference to the array containing average values for the sample amplitudes</param>
+    /// <param name="isBass">bool to check if current value is higher than average for bass frequencies</param>
+    /// <param name="isLow">bool to check if current value is higher than average for low-mid frequencies</param>
+    void GetBeat (ref float[] spectrum, ref float[] avgSpectrum, ref bool isBass, ref bool isLow) {
 
         int numBands = 2; //beatDetector_bandLimits.size() / 2 
         int numChannels = audioSource.clip.channels;
@@ -123,6 +134,12 @@ public class BeatDetector : MonoBehaviour {
         FFTHistory_beatDetector.AddBack(fftResult);
     }
 
+    /// <summary>
+    /// Function to add average values to the array
+    /// </summary>
+    /// <param name="avgSpectrum"></param>
+    /// <param name="numBands"></param>
+    /// <param name="fftHistory"></param>
     void FillAvgSpectrum(ref float[] avgSpectrum, int numBands, ref Deque<List<float>> fftHistory) {
         foreach (List<float> iterator in fftHistory) {
             List<float> fftResult = iterator;
@@ -137,6 +154,13 @@ public class BeatDetector : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Function to add variance values to the array
+    /// </summary>
+    /// <param name="varianceSpectrum"></param>
+    /// <param name="numBands"></param>
+    /// <param name="fftHistory"></param>
+    /// <param name="avgSpectrum"></param>
     void FillVarianceSpectrum(ref float[] varianceSpectrum, int numBands, ref Deque<List<float>> fftHistory, ref float[] avgSpectrum) {
         foreach (List<float> iterator in fftHistory) {
             List<float> fftResult = iterator;
@@ -152,10 +176,19 @@ public class BeatDetector : MonoBehaviour {
         }
     }
 
+    /// <summary>
+    /// Function to get the threshold value for the sample
+    /// </summary>
+    /// <param name="variance">variance for the sample</param>
+    /// <returns>float threshold</returns>
     float BeatThreshold(float variance) {
         return -15f * variance + 1.55f;
     }
 
+    /// <summary>
+    /// Function to change audio clip based on UI buttons in the scene
+    /// </summary>
+    /// <param name="clip">the clip to play</param>
     public void ChangeClip(AudioClip clip) {
         if (audioSource.isPlaying) {
             audioSource.Pause();
