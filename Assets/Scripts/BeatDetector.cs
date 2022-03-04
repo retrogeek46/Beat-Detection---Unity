@@ -118,8 +118,8 @@ public class BeatDetector : MonoBehaviour {
             float[] varianceSpectrum = new float[numBands];
 
             FillVarianceSpectrum(ref varianceSpectrum, numBands, ref FFTHistory_beatDetector, ref avgSpectrum);
-            isBass = (spectrum[0] - 0.05) > BeatThreshold(varianceSpectrum[0]) * avgSpectrum[0];
-            isLow = (spectrum[1] - 0.005) > BeatThreshold(varianceSpectrum[1]) * avgSpectrum[1];
+            isBass = (spectrum[0]) > BeatThreshold(varianceSpectrum[0]) * avgSpectrum[0];
+            isLow = (spectrum[1]) > BeatThreshold(varianceSpectrum[1]) * avgSpectrum[1];
         }
 
         List<float> fftResult = new List<float>(numBands);
